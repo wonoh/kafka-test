@@ -16,4 +16,9 @@ public class Receiver {
         log.info("메시지= '{}'",message);
     }
 
+    @KafkaListener(topics = {"aaa","wonoh"})
+    public void listenA(@Payload String message){
+        log.info("메시지= {}",message);
+    }
+
 }
