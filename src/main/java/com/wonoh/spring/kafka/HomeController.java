@@ -1,10 +1,9 @@
 package com.wonoh.spring.kafka;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -20,19 +19,15 @@ public class HomeController {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    /**
-     * /get?message=value 형태로 접근할 수 있도록 api 작성
-     * @param message
-     * @return
-     */
-    @RequestMapping(value="/get")
-    public String getData(@RequestParam(value = "message", defaultValue = "") String message ){
+    @RequestMapping(value="/send/{topic}/{message}")
+    public String sendData(@PathVariable(value = "topic") String topic,
+                          @PathVariable(value = "message") String message){
         // 현재 시간
         LocalDateTime date = LocalDateTime.now();
         String dateStr = date.format(fmt);
 
         // mytopic에 현재 시간 + message를 produce 한다.
-        kafkaTemplate.send("mytopic", dateStr + "   " + message);
+        kafkaTemplate.send(topic, dateStr + "   " + message);
         return "kafkaTemplate.send >>  " + message ;
     }
 
