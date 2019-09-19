@@ -1,6 +1,8 @@
 package com.wonoh.spring.kafka;
 
 
+import com.wonoh.spring.kafka.pojo.Account;
+import com.wonoh.spring.kafka.pojo.Address;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +31,23 @@ public class HomeController {
         // mytopic에 현재 시간 + message를 produce 한다.
         kafkaTemplate.send(topic, dateStr + "   " + message);
         return "kafkaTemplate.send >>  " + message ;
+    }
+
+    @RequestMapping(value = "/send/json")
+    public String sendJson(){
+
+        Account account = Account.builder()
+                                .name("원오")
+                                .age(25)
+                                .address(Address.builder()
+                                            .city("성남")
+                                            .detail("미금")
+                                            .build())
+                                .build();
+
+        kafkaTemplate.send("json_test",account);
+        return "kafkaTemplate.send json " + account.toString();
+
     }
 
 
